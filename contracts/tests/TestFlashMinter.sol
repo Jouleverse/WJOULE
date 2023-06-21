@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity 0.7.6;
+pragma solidity 0.8.0;
 
-import "../interfaces/IWETH10.sol";
+import "../interfaces/IWJ.sol";
 import "../interfaces/IERC3156FlashBorrower.sol";
 
 
@@ -22,17 +22,17 @@ contract TestFlashLender is IERC3156FlashBorrower {
         flashToken = token;
         flashValue = value;
         if (action == Action.NORMAL) {
-            flashBalance = IWETH10(lender).balanceOf(address(this));
+            flashBalance = IWJ(lender).balanceOf(address(this));
         } else if (action == Action.WITHDRAW) {
-            IWETH10(lender).withdraw(value);
+            IWJ(lender).withdraw(value);
             flashBalance = address(this).balance;
-            IWETH10(lender).deposit{ value: value }();
+            IWJ(lender).deposit{ value: value }();
         } else if (action == Action.STEAL) {
             // Do nothing
         } else if (action == Action.REENTER) {
             bytes memory newData = abi.encode(Action.NORMAL);
-            IWETH10(lender).approve(lender, IWETH10(lender).allowance(address(this), lender) + value * 2);
-            IWETH10(lender).flashLoan(this, address(lender), value * 2, newData);
+            IWJ(lender).approve(lender, IWJ(lender).allowance(address(this), lender) + value * 2);
+            IWJ(lender).flashLoan(this, address(lender), value * 2, newData);
         }
         return keccak256("ERC3156FlashBorrower.onFlashLoan");
     }
@@ -40,27 +40,27 @@ contract TestFlashLender is IERC3156FlashBorrower {
     function flashLoan(address lender, uint256 value) public {
         // Use this to pack arbitrary data to `onFlashLoan`
         bytes memory data = abi.encode(Action.NORMAL);
-        IWETH10(lender).approve(lender, value);
-        IWETH10(lender).flashLoan(this, address(lender), value, data);
+        IWJ(lender).approve(lender, value);
+        IWJ(lender).flashLoan(this, address(lender), value, data);
     }
 
     function flashLoanAndWithdraw(address lender, uint256 value) public {
         // Use this to pack arbitrary data to `onFlashLoan`
         bytes memory data = abi.encode(Action.WITHDRAW);
-        IWETH10(lender).approve(lender, value);
-        IWETH10(lender).flashLoan(this, address(lender), value, data);
+        IWJ(lender).approve(lender, value);
+        IWJ(lender).flashLoan(this, address(lender), value, data);
     }
 
     function flashLoanAndSteal(address lender, uint256 value) public {
         // Use this to pack arbitrary data to `onFlashLoan`
         bytes memory data = abi.encode(Action.STEAL);
-        IWETH10(lender).flashLoan(this, address(lender), value, data);
+        IWJ(lender).flashLoan(this, address(lender), value, data);
     }
 
     function flashLoanAndReenter(address lender, uint256 value) public {
         // Use this to pack arbitrary data to `onFlashLoan`
         bytes memory data = abi.encode(Action.REENTER);
-        IWETH10(lender).approve(lender, value);
-        IWETH10(lender).flashLoan(this, address(lender), value, data);
+        IWJ(lender).approve(lender, value);
+        IWJ(lender).flashLoan(this, address(lender), value, data);
     }
 }

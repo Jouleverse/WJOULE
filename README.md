@@ -1,4 +1,18 @@
-# WETH10
+# WJOULE
+
+Wrapper Joule, modified from WETH10.
+
+
+## History
+
+* 2023.6.21: 
+    - change solidity from 0.7.6 to 0.8.0
+    - use truffle instead of hardhat
+    - original codebase in branch "original"
+    - TBD: test cases under test/ need to be migrated
+
+
+# Original WETH10 README
 
 This [twitter hackathon project 🐦](https://twitter.com/r_ross_campbell/status/1314726259050639364?s=20) updates the canonical ["Wrapped Ether" WETH(9) contract](https://etherscan.io/address/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2#code) with minor but significant upgrades to save Ethereum network users gas and time in making transactions with tokenized ETH on lo-trust, lo-code 🍬⛽.
 
